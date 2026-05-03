@@ -1,9 +1,8 @@
--- PART 7: TRIGGERS
+-- PART 1: TRIGGERS
 
 -- TRIGGER 1: Prevent assigning a non-vacant room to a student
 
 CREATE OR REPLACE FUNCTION check_room_vacancy()
-RETURNS TRIGGER AS $$
 DECLARE
     v_status VARCHAR(20);
 BEGIN
@@ -19,7 +18,6 @@ BEGIN
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
 
 CREATE TRIGGER tr_check_room_vacancy
 BEFORE INSERT OR UPDATE ON students
@@ -29,7 +27,6 @@ EXECUTE FUNCTION check_room_vacancy();
 -- TRIGGER 2: Auto-update room status on student insert/delete
 
 CREATE OR REPLACE FUNCTION update_room_status()
-RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' AND NEW.room_no IS NOT NULL THEN
         UPDATE rooms SET status = 'Occupied' WHERE room_no = NEW.room_no;
@@ -40,7 +37,6 @@ BEGIN
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
 
 CREATE TRIGGER tr_update_room_status
 AFTER INSERT OR DELETE ON students
@@ -50,21 +46,19 @@ EXECUTE FUNCTION update_room_status();
 -- TRIGGER 3: Auto-set date_resolved when complaint is resolved
 
 CREATE OR REPLACE FUNCTION auto_resolve_date()
-RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.status = 'Resolved' AND OLD.status != 'Resolved' THEN
         NEW.date_resolved := CURRENT_TIMESTAMP;
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
 
 CREATE TRIGGER tr_auto_resolve_date
 BEFORE UPDATE ON complaints
 FOR EACH ROW
 EXECUTE FUNCTION auto_resolve_date();
 
--- PART 8: FUNCTIONS
+-- PART 2: FUNCTIONS
 
 -- FUNCTION 1: Get all vacant rooms
 -- Usage: SELECT * FROM get_vacant_rooms();
@@ -125,7 +119,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- PART 9: CURSOR (Simple Example)
+-- PART 3: CURSOR (Simple Example)
 
 -- CURSOR: Loop through all active students
 -- Usage: SELECT * FROM cursor_active_students();
