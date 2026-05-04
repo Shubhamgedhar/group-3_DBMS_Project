@@ -60,9 +60,6 @@ EXECUTE FUNCTION auto_resolve_date();
 
 -- PART 2: FUNCTIONS
 
--- FUNCTION 1: Get all vacant rooms
--- Usage: SELECT * FROM get_vacant_rooms();
-
 CREATE OR REPLACE FUNCTION get_vacant_rooms()
 RETURNS TABLE (
     room_no   VARCHAR,
@@ -78,9 +75,6 @@ BEGIN
         ORDER  BY r.floor, r.room_no;
 END;
 $$ LANGUAGE plpgsql;
-
--- FUNCTION 2: Get pending fees for all students
--- Usage: SELECT * FROM get_pending_fees();
 
 CREATE OR REPLACE FUNCTION get_pending_fees()
 RETURNS TABLE (
@@ -102,9 +96,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- FUNCTION 3: Get complaint summary by status
--- Usage: SELECT * FROM get_complaint_summary();
-
 CREATE OR REPLACE FUNCTION get_complaint_summary()
 RETURNS TABLE (
     status VARCHAR,
@@ -120,9 +111,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- PART 3: CURSOR (Simple Example)
-
--- CURSOR: Loop through all active students
--- Usage: SELECT * FROM cursor_active_students();
 
 CREATE OR REPLACE FUNCTION cursor_active_students()
 RETURNS TABLE (
